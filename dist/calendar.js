@@ -57,6 +57,7 @@
                     $input = $module.find(selector.input),
                     $container = $module.find(selector.popup),
                     $activator = $module.find(selector.activator),
+                    $okButton = $module.find(selector.okButton),
 
                     element = this,
                     instance = $module.data(moduleNamespace),
@@ -326,10 +327,31 @@
                                 }
 
                                 if (settings.today) {
-                                    var todayRow = $('<tr/>').appendTo(tbody);
-                                    var todayButton = $('<td/>').attr('colspan', '' + columns).addClass(className.today).appendTo(todayRow);
-                                    todayButton.text(formatter.today(settings));
-                                    todayButton.data(metadata.date, today);
+                                    if (settings.okButton) {
+                                        var todayRow = $('<tr/>').appendTo(tbody);
+
+                                        var todayTd = $('<td/>').attr('colspan', '' + columns).addClass(className.today).appendTo(todayRow).css({
+                                            'padding-top': '0px',
+                                            'padding-bottom': '0px'
+                                        });
+
+                                        var buttonsGroup = $('<div/>').addClass('ui buttons').css('width', '100%').appendTo(todayTd);
+                                        var todayButton = $('<div/>').addClass('ui button').appendTo(buttonsGroup);
+                                        var okButton = $('<div/>').addClass('ui green button').appendTo(buttonsGroup);
+
+                                        todayButton.text(formatter.today(settings));
+                                        todayButton.data(metadata.date, today);
+
+                                        okButton.text(formatter.okButton(settings));
+                                        okButton.data(focusDate);
+
+                                    } else {
+
+                                        var todayRow = $('<tr/>').appendTo(tbody);
+                                        var todayButton = $('<td/>').attr('colspan', '' + columns).addClass(className.today).appendTo(todayRow);
+                                        todayButton.text(formatter.today(settings));
+                                        todayButton.data(metadata.date, today);
+                                    }
                                 }
 
                                 module.update.focus(false, table);
@@ -377,6 +399,10 @@
                             $container.on('mouseup' + eventNamespace, module.event.mouseup);
                             $container.on('touchend' + eventNamespace, module.event.mouseup);
                             $container.on('mouseover' + eventNamespace, module.event.mouseover);
+                            $okButton.on('click', function () {
+                                console.log('click');
+                                module.popup('hide');
+                            });
                             if ($input.length) {
                                 $input.on('input' + eventNamespace, module.event.inputChange);
                                 $input.on('focus' + eventNamespace, module.event.inputFocus);
@@ -1012,6 +1038,7 @@
         firstDayOfWeek: 0,    // day for first day column (0 = Sunday)
         constantHeight: true, // add rows to shorter months to keep day calendar height consistent (6 rows)
         today: false,         // show a 'today/now' button at the bottom of the calendar
+        okButton: false,      // show a 'Ok' button at the bottom of the calendar
         closable: true,       // close the popup after selecting a date/time
         monthFirst: true,     // month before day when parsing/converting date from/to text
         touchReadonly: true,  // set input to readonly on touch devices
@@ -1112,6 +1139,9 @@
             },
             today: function (settings) {
                 return settings.type === 'date' ? settings.text.today : settings.text.now;
+            },
+            okButton: function (settings) {
+                return settings.type === 'date' ? settings.text.okButton : settings.text.okButton;
             },
             cell: function (cell, date, cellOptions) {
             }
@@ -1377,7 +1407,9 @@
             rangeCell: 'range',
             focusCell: 'focus',
             todayCell: 'today',
-            today: 'today link'
+            today: 'today link',
+            todayButton: 'ui button',
+            okButton: 'ui green button',
         },
 
         metadata: {
