@@ -335,9 +335,9 @@
                                             'padding-bottom': '0px'
                                         });
 
-                                        var buttonsGroup = $('<div/>').addClass('ui buttons').css('width', '100%').appendTo(todayTd);
-                                        var todayButton = $('<div/>').addClass('ui button').appendTo(buttonsGroup);
-                                        var okButton = $('<div/>').addClass('ui green button').appendTo(buttonsGroup);
+                                        var buttonsGroup = $('<div/>').addClass('ui buttons').css({'width':'100%', 'height': '32px', 'border-radius':'0px'}).appendTo(todayTd);
+                                        var todayButton = $('<div/>').addClass('ui button').css('border-radius','0px').appendTo(buttonsGroup);
+                                        var okButton = $('<div/>').addClass('ui green button').css('border-radius','0px').appendTo(buttonsGroup);
 
                                         todayButton.text(formatter.today(settings));
                                         todayButton.data(metadata.date, today);
